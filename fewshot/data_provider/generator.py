@@ -205,6 +205,7 @@ class FewShotDataFrameIterator(DataFrameIterator):
                  n_way,
                  k_shot,
                  query_size=None,
+                 customize_output_format=lambda support, query: (support, query), #we need this to do meta-learning via model.fit
                  *args, **kwargs):
         super(FewShotDataFrameIterator, self).__init__(dataframe,
                                                        directory,
@@ -229,6 +230,7 @@ class FewShotDataFrameIterator(DataFrameIterator):
             self.num_query_samples = self.num_images_in_query_augmentation
         self.num_samples = self.num_support_samples + self.num_query_samples
         self.train_ratio = self.num_support_samples / float(self.num_samples)
+        self.customize_output_format = customize_output_format
 
     def _adjust_size(self, index, size, num_images_in_augmentation):
         if np.isfinite(size):
@@ -274,7 +276,7 @@ class FewShotDataFrameIterator(DataFrameIterator):
                                                            self.support_image_data_generator)
         query = self._get_batches_of_transformed_samples(query_index_array,
                                                          self.query_image_data_generator)
-        return support, query
+        return self.customize_output_format(support, query)
 
     def next(self):
         """For python 2.x.
@@ -290,4 +292,4 @@ class FewShotDataFrameIterator(DataFrameIterator):
                                                            self.support_image_data_generator)
         query = self._get_batches_of_transformed_samples(query_index_array,
                                                          self.query_image_data_generator)
-        return support, query
+        return self.customize_output_format(support, query)

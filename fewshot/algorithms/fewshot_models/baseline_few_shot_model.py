@@ -2,7 +2,7 @@ import tensorflow as tf
 
 from fewshot.algorithms.fewshot_models import FewShotModelBase
 from fewshot.algorithms.special_layers import CosineLayer
-from fewshot.utils import reset_weights
+from fewshot.algorithms.utils import reset_weights
 
 
 class BaselineFewShotModel(FewShotModelBase):

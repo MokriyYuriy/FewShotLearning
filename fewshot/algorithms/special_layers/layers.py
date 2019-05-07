@@ -1,5 +1,7 @@
 import tensorflow as tf
 
+from fewshot.algorithms.utils import pairwise_cosine
+
 
 class CosineLayer(tf.keras.layers.Layer):
     def __init__(self, num_classes):
@@ -22,8 +24,4 @@ class CosineLayer(tf.keras.layers.Layer):
         return (input_shape[1].value, self.num_classes)
 
     def call(self, input, **kwargs):
-        dot_product = tf.matmul(input, self.W)
-        f_norm = tf.pow(tf.reduce_sum(tf.multiply(input, input), axis=1, keepdims=True), 0.5)
-        w_norm = tf.pow(tf.reduce_sum(tf.multiply(self.W, self.W), axis=0, keepdims=True), 0.5)
-
-        return dot_product / f_norm / w_norm
+        return pairwise_cosine(input, self.W, transpose_Y=False)
