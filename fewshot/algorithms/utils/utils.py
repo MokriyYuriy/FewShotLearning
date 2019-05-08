@@ -33,4 +33,4 @@ def pairwise_cosine(X, Y, transpose_Y=True):
 
 def cross_entropy_with_logits(targets, logits):
     normalized_logits = tf.nn.log_softmax(logits, -1)
-    return tf.reduce_mean(tf.reduce_sum(targets * normalized_logits, -1))
+    return -tf.reduce_mean(tf.reduce_sum(targets * normalized_logits, -1))
