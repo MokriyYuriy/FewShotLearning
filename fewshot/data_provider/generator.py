@@ -264,19 +264,3 @@ class FewShotDataFrameIterator(DataFrameIterator):
         query = self._get_batches_of_transformed_samples(query_index_array,
                                                          self.query_image_data_generator)
         return self.customize_output_format(support, query)
-
-    def next(self):
-        """For python 2.x.
-        # Returns
-            The next batch.
-        """
-        with self.lock:
-            support_index_array, query_index_array = self._sample_index_array()
-
-        # The transformation of images is not under thread lock
-        # so it can be done in parallel
-        support = self._get_batches_of_transformed_samples(support_index_array,
-                                                           self.support_image_data_generator)
-        query = self._get_batches_of_transformed_samples(query_index_array,
-                                                         self.query_image_data_generator)
-        return self.customize_output_format(support, query)
