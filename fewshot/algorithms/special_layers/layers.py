@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-from fewshot.algorithms.utils import pairwise_cosine
+from fewshot.algorithms.utils import pairwise_dot
 
 
 def pairwise_cosine(X, Y, transpose_Y=True):
@@ -35,4 +35,4 @@ class CosineLayer(tf.keras.layers.Layer):
         return (input_shape[1].value, self.num_classes)
 
     def call(self, input, **kwargs):
-        return pairwise_cosine(input, self.W, transpose_Y=False)
+        return pairwise_dot(input, self.W, transpose_Y=False, normalize=True)

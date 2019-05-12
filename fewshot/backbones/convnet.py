@@ -57,12 +57,13 @@ class ConvBlock(tf.keras.layers.Layer):
         return out_shape
 
 
-class ConvNet:
+class ConvNet(tf.keras.layers.Layer):
     def __init__(self, input_size, outdim=64, depth=4):
         self.blocks = []
         for i in range(depth):
             self.blocks.append(ConvBlock(outdim, add_maxpool=(i < 4)))
         self.inputs, self.outputs = self._build_net(input_size)
+        super(ConvNet, self).__init__()
 
     def build_model(self):
         return tf.keras.models.Model(self.inputs, self.outputs)
@@ -84,3 +85,14 @@ class ConvNet:
     def set_trainable(self, trainable):
         for block in self.blocks:
             block.set_trainable(trainable)
+
+    def compute_output_shape(self, input_shape):
+        output_shape = input_shape
+        for block in self.blocks:
+            output_shape = block.compute_outpute_shape(output_shape)
+        return output_shape
+
+    def call(self, x):
+        for block in self.blocks:
+            x = block(x)
+        return x
