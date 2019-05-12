@@ -181,19 +181,6 @@ class DataFrameIterator(BatchFromFilesMixin, Iterator):
         index_array = index_array.reshape((-1, self.num_images_in_augmentation))
         return self._get_batches_of_transformed_samples(index_array, self.image_data_generator)
 
-    def next(self):
-        """For python 2.x.
-        # Returns
-            The next batch.
-        """
-        with self.lock:
-            index_arrays = [next(self.index_generator) \
-                            for _ in range(self.num_images_in_augmentation)]
-            index_groups = list(zip(*index_arrays))
-        # The transformation of images is not under thread lock
-        # so it can be done in parallel
-        return self._get_batches_of_transformed_samples(index_groups, self.image_data_generator)
-
 
 class FewShotDataFrameIterator(DataFrameIterator):
     def __init__(self,
