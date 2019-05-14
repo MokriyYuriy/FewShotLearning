@@ -20,7 +20,7 @@ def compute_centers(features, targets):
     :param targets: NxC - class for each object represented as one-hot vector
     :return: averaged feature vectors values within each class: CxD
     """
-    return tf.matmul(targets, features, transpose_a=True) / tf.reduce_sum(targets, axis=-2)[:, None]
+    return tf.matmul(targets, features, transpose_a=True) / tf.reduce_sum(targets, axis=0)[:, None]
 
 
 def pairwise_dot(X, Y, transpose_Y=True, normalize=False):

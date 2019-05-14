@@ -16,9 +16,7 @@ def build_model_for_train(backbone, input_size, num_classes):
     support_features = tf.keras.layers.Flatten()(backbone(support_input))
     query_features = tf.keras.layers.Flatten()(backbone(query_input))
 
-    logits = tf.keras.layers.Dense(num_classes)(query_features)
-
-    tf.keras.layers.Lambda(find_centers_and_compute_logits)([support_features, support_classes, query_features])
+    logits = tf.keras.layers.Lambda(find_centers_and_compute_logits)([support_features, support_classes, query_features])
 
     return tf.keras.Model(inputs=[support_input, support_classes, query_input], outputs=logits)
 

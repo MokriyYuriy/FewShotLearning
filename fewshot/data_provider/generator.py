@@ -105,7 +105,7 @@ class DataFrameIterator(BatchFromFilesMixin, Iterator):
 
     def _create_encoding(self, classes):
         self.encoding = {class_name: to_categorical(class_index, num_classes=len(classes)) \
-                         for class_index, class_name in enumerate(sorted(classes))}
+                         for class_index, class_name in enumerate(classes)}
 
     def get_encoding(self):
         return self.encoding

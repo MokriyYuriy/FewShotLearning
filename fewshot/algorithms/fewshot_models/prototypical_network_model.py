@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 from fewshot.algorithms.special_layers import CosineLayer
-from fewshot.algorithms.utils import compute_centers
+from fewshot.algorithms.utils import compute_centers, pairwise_euclidian_distance
 
 
 class PrototypicalNetworkFewShotModel:
