@@ -8,9 +8,8 @@ import tensorflow as tf
 
 def baseline_fewshot_test(model,
                           generator,
-                          optimizer,
-                          batch_size=4,
-                          support_epochs=100,
+                          fewshot_train_args,
+                          fewshot_predict_args,
                           n_episodes=10000,
                           model_name='baseline',
                           tensorboard=False,
@@ -27,13 +26,9 @@ def baseline_fewshot_test(model,
     tbar = tqdm.tqdm(range(n_episodes), total=n_episodes)
     for episode_index in tbar:
         (support_x, support_y), (query_x, query_y) = generator[episode_index]
-        model.fit(support_x, support_y,
-                  optimizer=optimizer,
-                  batch_size=batch_size,
-                  epochs=support_epochs,
-                  verbose=0)
+        model.fit(support_x, support_y, **fewshot_train_args)
 
-        out = model.predict(query_x, batch_size=batch_size)
+        out = model.predict(query_x, **fewshot_predict_args)
 
         accuracy = np.mean(np.argmax(out, axis=1) == np.where(query_y == 1)[1])
         accuracies.append(accuracy)

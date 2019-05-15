@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-from fewshot.algorithms.utils import pairwise_dot
+from fewshot.algorithms.utils import pairwise_dot, pairwise_euclidian_distance, compute_centers
 
 
 def pairwise_cosine(X, Y, transpose_Y=True):
@@ -32,7 +32,29 @@ class CosineLayer(tf.keras.layers.Layer):
         super(CosineLayer, self).build(input_shape)
 
     def compute_output_shape(self, input_shape):
-        return (input_shape[1].value, self.num_classes)
+        return (input_shape[0].value, self.num_classes)
 
     def call(self, input, **kwargs):
-        return pairwise_dot(input, self.W, transpose_Y=False, normalize=True)
+        return pairwise_dot(input, self.W, transpose_Y=True, normalize=True)
+
+
+class EuclideanDistanceLayer(tf.keras.layers.Layer):
+    def __init__(self, negative=False, reduce_mean=True):
+        self.sign = -1 if negative else 1
+        self.reduce_mean = reduce_mean
+        super(EuclideanDistanceLayer, self).__init__()
+
+    def compute_output_shape(self, input_shape):
+        return (input_shape[0][0].value, input_shape[1][0].value)
+
+    def call(self, input):
+        return self.sign * pairwise_euclidian_distance(*input, reduce_mean=self.reduce_mean)
+
+
+class ComputeCenters(tf.keras.layers.Layer):
+    def compute_output_shape(self, input_shape):
+        return (input_shape[0][0].value, input_shape[1][1])
+
+    def call(self, input):
+        features, targets = input
+        return compute_centers(features, targets)
