@@ -193,11 +193,11 @@ class FewShotDataFrameIterator(DataFrameIterator):
                  k_shot,
                  query_size=None,
                  customize_output_format=lambda support, query: (support, query), #we need this to do meta-learning via model.fit
-                 *args, **kwargs):
+                 **kwargs):
         super(FewShotDataFrameIterator, self).__init__(dataframe,
                                                        directory,
                                                        image_data_generator=support_image_data_generator,
-                                                       *args, **kwargs)
+                                                       **kwargs)
         self.support_image_data_generator = support_image_data_generator
         self.query_image_data_generator = query_image_data_generator
         self.n_way = n_way

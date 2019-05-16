@@ -105,7 +105,6 @@ class Dataset:
                                  y_col=self.y_col,
                                  target_size=self.image_size,
                                  batch_size=batch_size,
-                                 seed=42,
                                  interpolation='bilinear',
                                  cache=self.cache,
                                  **kwargs)
@@ -128,7 +127,6 @@ class Dataset:
                                         x_col=self.x_col,
                                         y_col=self.y_col,
                                         target_size=self.image_size,
-                                        seed=42,
                                         interpolation='bilinear',
                                         cache=self.cache,
                                         **kwargs)

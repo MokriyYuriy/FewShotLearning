@@ -27,7 +27,9 @@ class Augmentation:
                  mixed_concat_prob=0,
                  beta_distr_param=1,
                  num_images_in_mixup=1,
-                 mixing_coeff=None):
+                 mixing_coeff=None,
+                 normalize_mean=(0.485, 0.456, 0.406),
+                 normalize_std=(0.229, 0.224, 0.225)):
         self.mode = mode
         self.size = size
         self.flip_prob = flip_prob
@@ -88,6 +90,14 @@ class Augmentation:
         if isinstance(self.crop_size, numbers.Number):
             self.crop_size = (int(self.crop_size), int(self.crop_size))
 
+        self.normalize_mean = normalize_mean
+        self.normalize_std = normalize_std
+
+    def normalize(self, img):
+        img = img / 255.
+        img = (img - np.array([[list(self.normalize_mean)]])) / np.array([[list(self.normalize_std)]])
+        return img
+
     def get_crop_size(self):
         return self.crop_size
 
@@ -122,7 +132,7 @@ class Augmentation:
         else:
             img = images[0]
             label = None if labels is None else labels[0]
-        img = np.array(np.clip(img, 0, 255), dtype='uint8')
+        img = self.normalize(img)
         return img, label
 
     def crop(self, img, x, y):
@@ -196,7 +206,7 @@ class Augmentation:
         return images
 
     def random_flip(self, images, p=0.5):
-        images = [img if random.random() > p else cv2.flip(img, 0)
+        images = [img if random.random() > p else cv2.flip(img, 1)
                   for img in images]
         return images
 
